@@ -169,6 +169,45 @@ app.get('/api/quotes', (req, res) => {
   });
 });
 
+// 7. PATCH /api/quotes/:protocol/cancel
+app.patch('/api/quotes/:protocol/cancel', (req, res) => {
+  const { protocol } = req.params;
+  const quotes = getQuotes();
+  const quote = quotes.find(q => q.protocol === protocol);
+
+  if (!quote) {
+    return res.status(404).json({ error: 'Orçamento não encontrado' });
+  }
+
+  quote.status = 'Cancelado pelo Solicitante';
+  fs.writeFileSync(quotesPath, JSON.stringify(quotes, null, 2), 'utf8');
+
+  res.json({
+    success: true,
+    message: 'Orçamento cancelado com sucesso',
+    quote
+  });
+});
+
+// 8. DELETE /api/quotes/:protocol
+app.delete('/api/quotes/:protocol', (req, res) => {
+  const { protocol } = req.params;
+  let quotes = getQuotes();
+  const initialLength = quotes.length;
+  quotes = quotes.filter(q => q.protocol !== protocol);
+
+  if (quotes.length === initialLength) {
+    return res.status(404).json({ error: 'Orçamento não encontrado' });
+  }
+
+  fs.writeFileSync(quotesPath, JSON.stringify(quotes, null, 2), 'utf8');
+
+  res.json({
+    success: true,
+    message: 'Orçamento excluído do histórico com sucesso'
+  });
+});
+
 // Health check
 app.get('/api/health', (req, res) => {
   res.json({

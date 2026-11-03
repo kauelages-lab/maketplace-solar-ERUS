@@ -1,7 +1,14 @@
 import React from 'react';
-import { X, FileText, CheckCircle, Clock } from 'lucide-react';
+import { X, FileText, Clock, Ban, Trash2, CheckCircle2 } from 'lucide-react';
 
-export default function QuotesDrawer({ isOpen, onClose, quotes, onNewQuoteClick }) {
+export default function QuotesDrawer({
+  isOpen,
+  onClose,
+  quotes,
+  onNewQuoteClick,
+  onCancelQuote,
+  onDeleteQuote
+}) {
   if (!isOpen) return null;
 
   return (
@@ -12,7 +19,7 @@ export default function QuotesDrawer({ isOpen, onClose, quotes, onNewQuoteClick 
             <FileText size={20} color="#FB923C" />
             <span>Minhas Cotações ({quotes.length})</span>
           </h3>
-          <button className="drawer-close" onClick={onClose}>
+          <button className="drawer-close" onClick={onClose} title="Fechar">
             <X size={20} />
           </button>
         </div>
@@ -37,29 +44,62 @@ export default function QuotesDrawer({ isOpen, onClose, quotes, onNewQuoteClick 
               </button>
             </div>
           ) : (
-            quotes.map((q, idx) => (
-              <div key={idx} className="quote-item-card">
-                <div className="quote-item-header">
-                  <span className="quote-protocol-pill">{q.protocol}</span>
-                  <span className="quote-status-badge">{q.status}</span>
-                </div>
-                <div className="quote-item-title">{q.productName}</div>
-                <div className="quote-item-meta">
-                  <div><strong>Fornecedor:</strong> {q.supplier}</div>
-                  <div><strong>Quantidade:</strong> {q.quantity}</div>
-                  <div><strong>Solicitante:</strong> {q.customerName} ({q.customerEmail})</div>
-                  {q.customerPhone && <div><strong>Contato:</strong> {q.customerPhone}</div>}
-                  {q.notes && (
-                    <div style={{ marginTop: '4px', fontStyle: 'italic', color: '#64748B' }}>
-                      "{q.notes}"
+            quotes.map((q) => {
+              const isCancelled = q.status === 'Cancelado pelo Solicitante';
+
+              return (
+                <div
+                  key={q.protocol}
+                  className={`quote-item-card ${isCancelled ? 'quote-item-cancelled' : ''}`}
+                >
+                  <div className="quote-item-header">
+                    <span className="quote-protocol-pill">{q.protocol}</span>
+                    <span className={`quote-status-badge ${isCancelled ? 'status-cancelled' : 'status-pending'}`}>
+                      {q.status}
+                    </span>
+                  </div>
+
+                  <div className="quote-item-title">{q.productName}</div>
+
+                  <div className="quote-item-meta">
+                    <div><strong>Fornecedor:</strong> {q.supplier}</div>
+                    <div><strong>Quantidade:</strong> {q.quantity}</div>
+                    <div><strong>Solicitante:</strong> {q.customerName} ({q.customerEmail})</div>
+                    {q.customerPhone && <div><strong>Contato:</strong> {q.customerPhone}</div>}
+                    {q.notes && (
+                      <div style={{ marginTop: '4px', fontStyle: 'italic', color: '#64748B' }}>
+                        "{q.notes}"
+                      </div>
+                    )}
+                    <div style={{ marginTop: '6px', fontSize: '0.72rem', color: '#94A3B8' }}>
+                      {new Date(q.date).toLocaleString('pt-BR')}
                     </div>
-                  )}
-                  <div style={{ marginTop: '6px', fontSize: '0.72rem', color: '#94A3B8' }}>
-                    {new Date(q.date).toLocaleString('pt-BR')}
+                  </div>
+
+                  <div className="quote-actions-row">
+                    {!isCancelled && (
+                      <button
+                        className="btn-cancel-quote"
+                        onClick={() => onCancelQuote(q.protocol)}
+                        title="Cancelar esta solicitação de orçamento"
+                      >
+                        <Ban size={14} />
+                        <span>Cancelar Pedido</span>
+                      </button>
+                    )}
+
+                    <button
+                      className="btn-delete-quote"
+                      onClick={() => onDeleteQuote(q.protocol)}
+                      title="Excluir este orçamento do seu histórico"
+                    >
+                      <Trash2 size={14} />
+                      <span>Excluir</span>
+                    </button>
                   </div>
                 </div>
-              </div>
-            ))
+              );
+            })
           )}
         </div>
       </div>

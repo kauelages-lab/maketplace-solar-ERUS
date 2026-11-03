@@ -24,6 +24,41 @@ export function saveStoredQuote(quote) {
   }
 }
 
+export function cancelStoredQuote(protocol) {
+  try {
+    const current = getStoredQuotes();
+    const updated = current.map(q => {
+      if (q.protocol === protocol) {
+        return { ...q, status: 'Cancelado pelo Solicitante' };
+      }
+      return q;
+    });
+    localStorage.setItem(LOCAL_STORAGE_QUOTES_KEY, JSON.stringify(updated));
+    
+    // Optional backend sync
+    fetch(`${API_BASE}/quotes/${protocol}/cancel`, { method: 'PATCH' }).catch(() => {});
+    
+    return updated;
+  } catch {
+    return getStoredQuotes();
+  }
+}
+
+export function deleteStoredQuote(protocol) {
+  try {
+    const current = getStoredQuotes();
+    const updated = current.filter(q => q.protocol !== protocol);
+    localStorage.setItem(LOCAL_STORAGE_QUOTES_KEY, JSON.stringify(updated));
+    
+    // Optional backend sync
+    fetch(`${API_BASE}/quotes/${protocol}`, { method: 'DELETE' }).catch(() => {});
+    
+    return updated;
+  } catch {
+    return getStoredQuotes();
+  }
+}
+
 export async function fetchSubsystems() {
   try {
     const res = await fetch(`${API_BASE}/subsystems`, { signal: AbortSignal.timeout(1500) });

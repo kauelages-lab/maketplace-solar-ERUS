@@ -8,7 +8,7 @@ import QuotesDrawer from './components/QuotesDrawer';
 import SuppliersModal from './components/SuppliersModal';
 import Footer from './components/Footer';
 import { PackageSearch, Filter } from 'lucide-react';
-import { fetchSubsystems, fetchSuppliers, fetchProducts, getStoredQuotes } from './services/api';
+import { fetchSubsystems, fetchSuppliers, fetchProducts, getStoredQuotes, cancelStoredQuote, deleteStoredQuote } from './services/api';
 
 export default function App() {
   const [products, setProducts] = useState([]);
@@ -69,6 +69,16 @@ export default function App() {
 
   const handleQuoteSuccess = (newQuote) => {
     setQuotes((prev) => [newQuote, ...prev]);
+  };
+
+  const handleCancelQuote = (protocol) => {
+    const updated = cancelStoredQuote(protocol);
+    setQuotes(updated);
+  };
+
+  const handleDeleteQuote = (protocol) => {
+    const updated = deleteStoredQuote(protocol);
+    setQuotes(updated);
   };
 
   const handleOpenGeneralQuote = () => {
@@ -179,6 +189,8 @@ export default function App() {
         onClose={() => setIsQuotesDrawerOpen(false)}
         quotes={quotes}
         onNewQuoteClick={handleOpenGeneralQuote}
+        onCancelQuote={handleCancelQuote}
+        onDeleteQuote={handleDeleteQuote}
       />
 
       <SuppliersModal

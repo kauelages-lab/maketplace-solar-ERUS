@@ -1129,6 +1129,75 @@ input, select, textarea {
   line-height: 1.4;
 }
 
+.quote-item-card.quote-item-cancelled {
+  background: #F8FAFC;
+  border-left: 3px solid #94A3B8;
+}
+
+.quote-item-card.quote-item-cancelled .quote-item-title {
+  color: #64748B;
+  text-decoration: line-through;
+}
+
+.quote-status-badge.status-pending {
+  background: #FEF3C7;
+  color: #B45309;
+}
+
+.quote-status-badge.status-cancelled {
+  background: #F1F5F9;
+  color: #64748B;
+  border: 1px solid #CBD5E1;
+}
+
+.quote-actions-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--border-color);
+}
+
+.btn-cancel-quote {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #DC2626;
+  background: #FEF2F2;
+  border: 1px solid #FCA5A5;
+  padding: 5px 10px;
+  border-radius: var(--radius-sm);
+  transition: all 0.2s ease;
+}
+
+.btn-cancel-quote:hover {
+  background: #FEE2E2;
+  color: #B91C1C;
+}
+
+.btn-delete-quote {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #64748B;
+  background: #F1F5F9;
+  border: 1px solid #E2E8F0;
+  padding: 5px 10px;
+  border-radius: var(--radius-sm);
+  transition: all 0.2s ease;
+}
+
+.btn-delete-quote:hover {
+  background: #E2E8F0;
+  color: #1E293B;
+}
+
 /* Footer */
 .erus-footer {
   background: var(--secondary);
