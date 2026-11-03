@@ -77,7 +77,7 @@ export default function QuotesDrawer({
                   </div>
 
                   <div className="quote-actions-row">
-                    {!isCancelled && (
+                    {!isCancelled ? (
                       <button
                         className="btn-cancel-quote"
                         onClick={() => onCancelQuote(q.protocol)}
@@ -86,16 +86,16 @@ export default function QuotesDrawer({
                         <Ban size={14} />
                         <span>Cancelar Pedido</span>
                       </button>
+                    ) : (
+                      <button
+                        className="btn-delete-quote"
+                        onClick={() => onDeleteQuote(q.protocol)}
+                        title="Excluir este orçamento cancelado do seu histórico"
+                      >
+                        <Trash2 size={14} />
+                        <span>Excluir do Histórico</span>
+                      </button>
                     )}
-
-                    <button
-                      className="btn-delete-quote"
-                      onClick={() => onDeleteQuote(q.protocol)}
-                      title="Excluir este orçamento do seu histórico"
-                    >
-                      <Trash2 size={14} />
-                      <span>Excluir</span>
-                    </button>
                   </div>
                 </div>
               );
