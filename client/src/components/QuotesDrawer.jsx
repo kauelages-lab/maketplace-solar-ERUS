@@ -1,5 +1,5 @@
-import React from 'react';
-import { X, FileText, Clock, Ban, Trash2, Check, AlertCircle } from 'lucide-react';
+import React, { useState } from 'react';
+import { X, FileText, Clock, Ban, Trash2, Check, ShieldCheck, Lock, Unlock, ShieldAlert } from 'lucide-react';
 
 export default function QuotesDrawer({
   isOpen,
@@ -7,22 +7,122 @@ export default function QuotesDrawer({
   quotes,
   onNewQuoteClick,
   onCancelQuote,
-  onDeleteQuote
+  onDeleteQuote,
+  onUpdateQuoteStep
 }) {
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [showPinPrompt, setShowPinPrompt] = useState(false);
+  const [pinInput, setPinInput] = useState('');
+  const [pinError, setPinError] = useState(false);
+
   if (!isOpen) return null;
+
+  const handleAdminToggle = () => {
+    if (isAdmin) {
+      setIsAdmin(false);
+    } else {
+      setShowPinPrompt(true);
+      setPinInput('');
+      setPinError(false);
+    }
+  };
+
+  const handleVerifyPin = (e) => {
+    e.preventDefault();
+    // Default PIN: erus or 1234
+    if (pinInput.toLowerCase() === 'erus' || pinInput === '1234' || pinInput.toLowerCase() === 'admin') {
+      setIsAdmin(true);
+      setShowPinPrompt(false);
+      setPinError(false);
+    } else {
+      setPinError(true);
+    }
+  };
+
+  const getStepStatus = (currentStep, stepNum) => {
+    if (currentStep > stepNum) return 'completed';
+    if (currentStep === stepNum) return 'active';
+    return 'pending';
+  };
+
+  const getStepDetailText = (step) => {
+    switch (step) {
+      case 1:
+        return 'Demanda recebida e registrada no sistema ERUS.';
+      case 2:
+        return 'Análise de estoque e compatibilidade técnica com o fornecedor.';
+      case 3:
+        return 'Proposta comercial pronta com preços e prazos de frete.';
+      case 4:
+        return 'Cotação finalizada com sucesso! Proposta enviada ao solicitante.';
+      default:
+        return 'Em análise pelo departamento de engenharia do fornecedor.';
+    }
+  };
 
   return (
     <div className="drawer-overlay" onClick={onClose}>
       <div className="drawer-panel" onClick={(e) => e.stopPropagation()}>
         <div className="drawer-header">
-          <h3>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <FileText size={20} color="#FB923C" />
-            <span>Minhas Cotações ({quotes.length})</span>
-          </h3>
-          <button className="drawer-close" onClick={onClose} title="Fechar">
-            <X size={20} />
-          </button>
+            <h3 style={{ margin: 0 }}>Minhas Cotações ({quotes.length})</h3>
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            {/* Admin Mode Toggle */}
+            <button
+              className={`btn-admin-toggle ${isAdmin ? 'admin-active' : ''}`}
+              onClick={handleAdminToggle}
+              title={isAdmin ? 'Desativar Modo Administrador' : 'Ativar Modo Administrador para alterar etapas'}
+            >
+              {isAdmin ? <Unlock size={14} /> : <Lock size={14} />}
+              <span>{isAdmin ? 'Admin Ativo' : 'Sou Admin'}</span>
+            </button>
+
+            <button className="drawer-close" onClick={onClose} title="Fechar">
+              <X size={20} />
+            </button>
+          </div>
         </div>
+
+        {/* PIN Prompt Modal / Dropdown */}
+        {showPinPrompt && (
+          <div className="admin-pin-prompt">
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+              <span style={{ fontSize: '0.8rem', fontWeight: 800, color: '#0F172A', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                <ShieldCheck size={14} color="#F97316" /> Acesso Administrador ERUS
+              </span>
+              <button
+                style={{ fontSize: '0.75rem', color: '#64748B' }}
+                onClick={() => setShowPinPrompt(false)}
+              >
+                Cancelar
+              </button>
+            </div>
+            <p style={{ fontSize: '0.74rem', color: '#475569', marginBottom: '8px' }}>
+              Digite a senha de administrador para poder atualizar as etapas das cotações (senha padrão: <strong>erus</strong> ou <strong>1234</strong>):
+            </p>
+            <form onSubmit={handleVerifyPin} style={{ display: 'flex', gap: '6px' }}>
+              <input
+                type="password"
+                placeholder="Senha de admin..."
+                value={pinInput}
+                onChange={(e) => setPinInput(e.target.value)}
+                autoFocus
+                className="admin-pin-input"
+              />
+              <button type="submit" className="admin-pin-submit">
+                Entrar
+              </button>
+            </form>
+            {pinError && (
+              <span style={{ color: '#DC2626', fontSize: '0.72rem', marginTop: '4px', display: 'block' }}>
+                Senha incorreta. Tente 'erus' ou '1234'.
+              </span>
+            )}
+          </div>
+        )}
 
         <div className="drawer-body">
           {quotes.length === 0 ? (
@@ -46,6 +146,7 @@ export default function QuotesDrawer({
           ) : (
             quotes.map((q) => {
               const isCancelled = q.status === 'Cancelado pelo Solicitante';
+              const currentStep = q.step !== undefined ? q.step : 2;
 
               return (
                 <div
@@ -76,32 +177,44 @@ export default function QuotesDrawer({
                     </div>
                   </div>
 
-                  {/* Visual Progress Tracking (Andamento das Solicitações) */}
+                  {/* Visual Progress Tracking */}
                   {!isCancelled ? (
                     <div className="quote-stepper-box">
                       <div className="stepper-title">Andamento da Cotação:</div>
                       
                       <div className="stepper-track">
-                        <div className="stepper-step completed">
-                          <div className="step-circle"><Check size={12} strokeWidth={3} /></div>
+                        {/* Step 1 */}
+                        <div className={`stepper-step ${getStepStatus(currentStep, 1)}`}>
+                          <div className="step-circle">
+                            {currentStep > 1 ? <Check size={12} strokeWidth={3} /> : '1'}
+                          </div>
                           <span className="step-label">Solicitado</span>
                         </div>
-                        <div className="step-line active"></div>
+                        <div className={`step-line ${currentStep >= 2 ? 'active' : ''}`}></div>
                         
-                        <div className="stepper-step active">
-                          <div className="step-circle"><Clock size={12} /></div>
-                          <span className="step-label">Análise Técnica</span>
+                        {/* Step 2 */}
+                        <div className={`stepper-step ${getStepStatus(currentStep, 2)}`}>
+                          <div className="step-circle">
+                            {currentStep > 2 ? <Check size={12} strokeWidth={3} /> : (currentStep === 2 ? <Clock size={12} /> : '2')}
+                          </div>
+                          <span className="step-label">Análise</span>
                         </div>
-                        <div className="step-line"></div>
+                        <div className={`step-line ${currentStep >= 3 ? 'active' : ''}`}></div>
                         
-                        <div className="stepper-step">
-                          <div className="step-circle">3</div>
+                        {/* Step 3 */}
+                        <div className={`stepper-step ${getStepStatus(currentStep, 3)}`}>
+                          <div className="step-circle">
+                            {currentStep > 3 ? <Check size={12} strokeWidth={3} /> : (currentStep === 3 ? <Clock size={12} /> : '3')}
+                          </div>
                           <span className="step-label">Proposta</span>
                         </div>
-                        <div className="step-line"></div>
+                        <div className={`step-line ${currentStep >= 4 ? 'active' : ''}`}></div>
                         
-                        <div className="stepper-step">
-                          <div className="step-circle">4</div>
+                        {/* Step 4 */}
+                        <div className={`stepper-step ${getStepStatus(currentStep, 4)}`}>
+                          <div className="step-circle">
+                            {currentStep >= 4 ? <Check size={12} strokeWidth={3} /> : '4'}
+                          </div>
                           <span className="step-label">Concluído</span>
                         </div>
                       </div>
@@ -109,12 +222,48 @@ export default function QuotesDrawer({
                       <div className="stepper-details">
                         <div className="stepper-detail-item">
                           <span className="detail-dot"></span>
-                          <span>Fase Atual: <strong>Análise de estoque e compatibilidade técnica com o fornecedor</strong></span>
+                          <span>Fase Atual: <strong>{getStepDetailText(currentStep)}</strong></span>
                         </div>
                         <div className="stepper-sla">
-                          Previsão de retorno comercial: <strong>24h a 48h úteis</strong> via <em>{q.customerEmail}</em>
+                          Previsão de retorno: <strong>24h a 48h úteis</strong> via <em>{q.customerEmail}</em>
                         </div>
                       </div>
+
+                      {/* Admin Controller (Exclusivo Administrador) */}
+                      {isAdmin && (
+                        <div className="admin-step-controller">
+                          <div className="admin-ctrl-label">
+                            <ShieldAlert size={13} color="#F97316" />
+                            <span>Atualizar Etapa (Exclusivo Administrador ERUS):</span>
+                          </div>
+                          <div className="admin-step-buttons">
+                            <button
+                              className={`admin-btn-step ${currentStep === 1 ? 'selected' : ''}`}
+                              onClick={() => onUpdateQuoteStep(q.protocol, 1, 'Solicitação Registrada')}
+                            >
+                              1. Solicitado
+                            </button>
+                            <button
+                              className={`admin-btn-step ${currentStep === 2 ? 'selected' : ''}`}
+                              onClick={() => onUpdateQuoteStep(q.protocol, 2, 'Em Análise Técnica')}
+                            >
+                              2. Análise Técnica
+                            </button>
+                            <button
+                              className={`admin-btn-step ${currentStep === 3 ? 'selected' : ''}`}
+                              onClick={() => onUpdateQuoteStep(q.protocol, 3, 'Proposta Comercial Pronta')}
+                            >
+                              3. Proposta Pronta
+                            </button>
+                            <button
+                              className={`admin-btn-step ${currentStep === 4 ? 'selected' : ''}`}
+                              onClick={() => onUpdateQuoteStep(q.protocol, 4, 'Cotação Concluída')}
+                            >
+                              4. Concluído ✓
+                            </button>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   ) : (
                     <div className="cancelled-notice-box">

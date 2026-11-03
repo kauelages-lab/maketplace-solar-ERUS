@@ -16,6 +16,7 @@ import {
   getStoredQuotes,
   cancelStoredQuote,
   deleteStoredQuote,
+  updateStoredQuoteStep,
   findSuppliersBySearch
 } from './services/api';
 
@@ -95,6 +96,11 @@ export default function App() {
 
   const handleDeleteQuote = (protocol) => {
     const updated = deleteStoredQuote(protocol);
+    setQuotes(updated);
+  };
+
+  const handleUpdateQuoteStep = (protocol, step, statusText) => {
+    const updated = updateStoredQuoteStep(protocol, step, statusText);
     setQuotes(updated);
   };
 
@@ -347,6 +353,7 @@ export default function App() {
         onNewQuoteClick={handleOpenGeneralQuote}
         onCancelQuote={handleCancelQuote}
         onDeleteQuote={handleDeleteQuote}
+        onUpdateQuoteStep={handleUpdateQuoteStep}
       />
 
       <SuppliersModal

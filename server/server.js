@@ -208,6 +208,28 @@ app.delete('/api/quotes/:protocol', (req, res) => {
   });
 });
 
+// 9. PATCH /api/quotes/:protocol/step
+app.patch('/api/quotes/:protocol/step', (req, res) => {
+  const { protocol } = req.params;
+  const { step, status } = req.body;
+  const quotes = getQuotes();
+  const quote = quotes.find(q => q.protocol === protocol);
+
+  if (!quote) {
+    return res.status(404).json({ error: 'Orçamento não encontrado' });
+  }
+
+  if (step !== undefined) quote.step = step;
+  if (status) quote.status = status;
+  fs.writeFileSync(quotesPath, JSON.stringify(quotes, null, 2), 'utf8');
+
+  res.json({
+    success: true,
+    message: 'Etapa atualizada com sucesso pelo Administrador',
+    quote
+  });
+});
+
 // Health check
 app.get('/api/health', (req, res) => {
   res.json({

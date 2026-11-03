@@ -53,6 +53,31 @@ export function deleteStoredQuote(protocol) {
   }
 }
 
+export function updateStoredQuoteStep(protocol, step, statusText) {
+  try {
+    const current = getStoredQuotes();
+    const updated = current.map(q => {
+      if (q.protocol === protocol) {
+        return {
+          ...q,
+          step,
+          status: statusText || q.status
+        };
+      }
+      return q;
+    });
+    localStorage.setItem(LOCAL_STORAGE_QUOTES_KEY, JSON.stringify(updated));
+    fetch(`${API_BASE}/quotes/${protocol}/step`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ step, status: statusText })
+    }).catch(() => {});
+    return updated;
+  } catch {
+    return getStoredQuotes();
+  }
+}
+
 export async function fetchSubsystems() {
   try {
     const res = await fetch(`${API_BASE}/subsystems`, { signal: AbortSignal.timeout(1500) });
