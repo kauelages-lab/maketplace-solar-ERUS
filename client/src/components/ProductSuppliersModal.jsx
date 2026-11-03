@@ -1,6 +1,6 @@
 import React from 'react';
-import { X, Building2, MapPin, Phone, MessageSquare, Globe, Send, ShieldCheck } from 'lucide-react';
-import { getSuppliersForProduct } from '../services/api';
+import { X, Building2, MapPin, Phone, MessageSquare, ExternalLink, Send, ShieldCheck, FileSpreadsheet } from 'lucide-react';
+import { getSuppliersForProduct, getProductSupplierDirectUrl } from '../services/api';
 
 export default function ProductSuppliersModal({ product, onClose, onSelectSupplierToQuote }) {
   if (!product) return null;
@@ -9,15 +9,15 @@ export default function ProductSuppliersModal({ product, onClose, onSelectSuppli
 
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-card" style={{ maxWidth: '780px' }} onClick={(e) => e.stopPropagation()}>
+      <div className="modal-card" style={{ maxWidth: '820px' }} onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
           <div>
             <h3>
               <Building2 size={22} color="#F97316" />
-              <span>Fornecedores para: {product.name}</span>
+              <span>Fornecedores Diretos: {product.name}</span>
             </h3>
             <p style={{ fontSize: '0.8rem', color: '#64748B', marginTop: '2px' }}>
-              {suppliers.length} {suppliers.length === 1 ? 'empresa homologada disponível' : 'empresas homologadas disponíveis'} para este item
+              {suppliers.length} {suppliers.length === 1 ? 'fornecedor cadastrado com link direto para o produto' : 'fornecedores cadastrados com links diretos para o produto'}
             </p>
           </div>
           <button className="modal-close-btn" onClick={onClose} title="Fechar">
@@ -26,7 +26,7 @@ export default function ProductSuppliersModal({ product, onClose, onSelectSuppli
         </div>
 
         <div className="modal-body">
-          <div className="modal-product-summary" style={{ marginBottom: '16px' }}>
+          <div className="modal-product-summary" style={{ marginBottom: '18px' }}>
             <div className="modal-summary-title">{product.name}</div>
             <div className="modal-summary-subtitle">{product.subsystem} • {product.technicalName}</div>
             <div style={{ fontSize: '0.78rem', color: '#475569', marginTop: '4px' }}>
@@ -36,8 +36,10 @@ export default function ProductSuppliersModal({ product, onClose, onSelectSuppli
 
           <div className="suppliers-grid">
             {suppliers.map((sup, idx) => {
+              const directProductUrl = getProductSupplierDirectUrl(product, sup.name);
+
               const whatsappMsg = encodeURIComponent(
-                `Olá, ${sup.name}! Gostaria de solicitar um orçamento para o item "${product.name}" (${product.estimatedQty}) através do marketplace ERUS Solar.`
+                `Olá, equipe da ${sup.name}! Gostaria de solicitar especificações e orçamento para o item "${product.name}" (${product.estimatedQty}) encontrado através do marketplace ERUS Solar.`
               );
 
               return (
@@ -58,6 +60,22 @@ export default function ProductSuppliersModal({ product, onClose, onSelectSuppli
                     <span className="supplier-region-badge">{sup.region}</span>
                   </div>
 
+                  {/* Direct Product Link Highlight */}
+                  {directProductUrl && (
+                    <div style={{ margin: '8px 0 4px' }}>
+                      <a
+                        href={directProductUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="btn-product-direct-link"
+                        title={`Ir direto para a página e ficha técnica deste item no catálogo da ${sup.name}`}
+                      >
+                        <ExternalLink size={15} />
+                        <span>Acessar {product.name} no Catálogo da {sup.name} ↗</span>
+                      </a>
+                    </div>
+                  )}
+
                   <div className="supplier-contact-row" style={{ marginTop: '8px' }}>
                     {sup.whatsapp && (
                       <a
@@ -77,31 +95,19 @@ export default function ProductSuppliersModal({ product, onClose, onSelectSuppli
                         <span>{sup.phone}</span>
                       </a>
                     )}
-
-                    {sup.website && (
-                      <a
-                        href={sup.website.startsWith('http') ? sup.website : `https://${sup.website}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="contact-link"
-                      >
-                        <Globe size={14} />
-                        <span>Website</span>
-                      </a>
-                    )}
                   </div>
 
-                  <div style={{ marginTop: '12px', display: 'flex', justifyContent: 'flex-end' }}>
+                  <div style={{ marginTop: '14px', display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
                     <button
                       className="card-action-btn"
-                      style={{ padding: '8px 14px', fontSize: '0.82rem', width: 'auto' }}
+                      style={{ padding: '9px 16px', fontSize: '0.84rem', width: 'auto' }}
                       onClick={() => {
                         onClose();
                         onSelectSupplierToQuote(product, sup.name);
                       }}
                     >
                       <Send size={14} />
-                      <span>Solicitar Orçamento c/ {sup.name}</span>
+                      <span>Solicitar Cotação c/ {sup.name}</span>
                     </button>
                   </div>
                 </div>

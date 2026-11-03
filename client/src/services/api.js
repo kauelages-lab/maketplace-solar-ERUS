@@ -150,6 +150,107 @@ export function getSuppliersForProduct(product) {
   });
 }
 
+export function getProductSupplierDirectUrl(product, supplierName) {
+  if (!supplierName) return null;
+
+  const sName = supplierName.toLowerCase();
+  const pName = (product?.name || '').toLowerCase();
+  const pTech = (product?.technicalName || '').toLowerCase();
+
+  // 1. WEG specific deep-links
+  if (sName.includes('weg')) {
+    if (pName.includes('cabo')) return 'https://www.weg.net/catalog/weg/BR/pt/search?text=cabos+solares';
+    if (pName.includes('inversor')) return 'https://www.weg.net/catalog/weg/BR/pt/Energia-Solar/Inversores-Solares/c/BR_WSS_SOLAR_INVERTERS';
+    if (pName.includes('string box') || pName.includes('quadro')) return 'https://www.weg.net/catalog/weg/BR/pt/Energia-Solar/String-Box/c/BR_WSS_SOLAR_STRING_BOX';
+    if (pName.includes('atuador') || pName.includes('motor')) return 'https://www.weg.net/catalog/weg/BR/pt/search?text=motoredutor+solar';
+    if (pName.includes('tcu') || pName.includes('controlador')) return 'https://www.weg.net/catalog/weg/BR/pt/search?text=controlador+solar+tcu';
+    if (pName.includes('anemometro') || pName.includes('inclinometro') || pName.includes('sensor')) return 'https://www.weg.net/catalog/weg/BR/pt/search?text=sensor+solar';
+    return `https://www.weg.net/catalog/weg/BR/pt/search?text=${encodeURIComponent(product.name || 'solar')}`;
+  }
+
+  // 2. Santoro Atuadores
+  if (sName.includes('santoro')) {
+    if (pName.includes('atuador')) return 'https://santoroatuador.com.br/atuador-linear/';
+    if (pName.includes('fuso') || pName.includes('haste')) return 'https://santoroatuador.com.br/haste-de-impulso/';
+    return 'https://santoroatuador.com.br/produtos/';
+  }
+
+  // 3. Emov Brasil
+  if (sName.includes('emov')) {
+    if (pName.includes('atuador')) return 'https://emovbrasil.com.br/atuadores-lineares/';
+    if (pName.includes('inclinometro') || pName.includes('sensor')) return 'https://emovbrasil.com.br/inclinometros/';
+    return 'https://emovbrasil.com.br/produtos/';
+  }
+
+  // 4. PLP do Brasil
+  if (sName.includes('plp')) {
+    if (pName.includes('tubo') || pName.includes('torque') || pName.includes('eixo')) return 'https://plp.com.br/mercados/energia-solar/';
+    if (pName.includes('estaca') || pName.includes('coluna')) return 'https://plp.com.br/mercados/energia-solar/';
+    if (pName.includes('grampo') || pName.includes('clame')) return 'https://plp.com.br/mercados/energia-solar/';
+    return 'https://plp.com.br/mercados/energia-solar/';
+  }
+
+  // 5. Array Technologies
+  if (sName.includes('array')) {
+    if (pName.includes('tubo') || pName.includes('torque') || pName.includes('eixo')) return 'https://arraytechinc.com/products/duratrack/';
+    if (pName.includes('slew') || pName.includes('motor')) return 'https://arraytechinc.com/products/omnitrack/';
+    return 'https://arraytechinc.com/products/';
+  }
+
+  // 6. Soltec
+  if (sName.includes('soltec')) {
+    return 'https://soltec.com/trackers/';
+  }
+
+  // 7. Nextracker
+  if (sName.includes('nextracker')) {
+    if (pName.includes('tcu') || pName.includes('controlador')) return 'https://www.nextracker.com/products/truecapture/';
+    return 'https://www.nextracker.com/products/';
+  }
+
+  // 8. Trina Tracker / Trina Solar
+  if (sName.includes('trina')) {
+    if (pName.includes('modulo') || pName.includes('painel')) return 'https://www.trinasolar.com/en-glb/product/vertex-bifacial';
+    return 'https://www.trinasolar.com/en-glb/trina-tracker';
+  }
+
+  // 9. Sou Energy
+  if (sName.includes('sou energy')) {
+    if (pName.includes('cabo')) return 'https://souenergy.com.br/?s=cabos+solares';
+    if (pName.includes('modulo') || pName.includes('painel')) return 'https://souenergy.com.br/?s=modulo+bifacial';
+    if (pName.includes('inversor')) return 'https://souenergy.com.br/?s=inversor';
+    if (pName.includes('string box')) return 'https://souenergy.com.br/?s=string+box';
+    if (pName.includes('grampo') || pName.includes('trilho')) return 'https://souenergy.com.br/?s=estrutura+fixacao';
+    return `https://souenergy.com.br/?s=${encodeURIComponent(product?.name || 'solar')}`;
+  }
+
+  // 10. Cearasol
+  if (sName.includes('cearasol')) {
+    if (pName.includes('cabo')) return 'https://cearasol.com.br/?s=cabo+solar';
+    if (pName.includes('modulo') || pName.includes('painel')) return 'https://cearasol.com.br/?s=painel+solar';
+    if (pName.includes('grampo') || pName.includes('trilho')) return 'https://cearasol.com.br/?s=estrutura';
+    return `https://cearasol.com.br/?s=${encodeURIComponent(product?.name || 'solar')}`;
+  }
+
+  // 11. Fortal Solar
+  if (sName.includes('fortal solar')) {
+    if (pName.includes('cabo')) return 'https://fortalsolar.com.br/?s=cabos';
+    if (pName.includes('string box')) return 'https://fortalsolar.com.br/?s=string+box';
+    if (pName.includes('grampo')) return 'https://fortalsolar.com.br/?s=grampos';
+    return `https://fortalsolar.com.br/?s=${encodeURIComponent(product?.name || 'solar')}`;
+  }
+
+  // 12. BSolar
+  if (sName.includes('bsolar')) {
+    if (pName.includes('inversor')) return 'https://bsolar.com.br/?s=inversor';
+    if (pName.includes('string box')) return 'https://bsolar.com.br/?s=string+box';
+    if (pName.includes('cabo')) return 'https://bsolar.com.br/?s=cabos';
+    return `https://bsolar.com.br/?s=${encodeURIComponent(product?.name || 'solar')}`;
+  }
+
+  return `https://www.google.com/search?q=${encodeURIComponent(`${supplierName} ${product?.name || ''} solar tracker`)}`;
+}
+
 export function findSuppliersBySearch(searchTerm, matchedProducts = []) {
   if (!searchTerm && matchedProducts.length === 0) {
     return STATIC_SUPPLIERS;
