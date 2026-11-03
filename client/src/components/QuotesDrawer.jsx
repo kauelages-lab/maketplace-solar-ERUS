@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, FileText, Clock, Ban, Trash2, CheckCircle2 } from 'lucide-react';
+import { X, FileText, Clock, Ban, Trash2, Check, AlertCircle } from 'lucide-react';
 
 export default function QuotesDrawer({
   isOpen,
@@ -72,9 +72,56 @@ export default function QuotesDrawer({
                       </div>
                     )}
                     <div style={{ marginTop: '6px', fontSize: '0.72rem', color: '#94A3B8' }}>
-                      {new Date(q.date).toLocaleString('pt-BR')}
+                      Data do Pedido: {new Date(q.date).toLocaleString('pt-BR')}
                     </div>
                   </div>
+
+                  {/* Visual Progress Tracking (Andamento das Solicitações) */}
+                  {!isCancelled ? (
+                    <div className="quote-stepper-box">
+                      <div className="stepper-title">Andamento da Cotação:</div>
+                      
+                      <div className="stepper-track">
+                        <div className="stepper-step completed">
+                          <div className="step-circle"><Check size={12} strokeWidth={3} /></div>
+                          <span className="step-label">Solicitado</span>
+                        </div>
+                        <div className="step-line active"></div>
+                        
+                        <div className="stepper-step active">
+                          <div className="step-circle"><Clock size={12} /></div>
+                          <span className="step-label">Análise Técnica</span>
+                        </div>
+                        <div className="step-line"></div>
+                        
+                        <div className="stepper-step">
+                          <div className="step-circle">3</div>
+                          <span className="step-label">Proposta</span>
+                        </div>
+                        <div className="step-line"></div>
+                        
+                        <div className="stepper-step">
+                          <div className="step-circle">4</div>
+                          <span className="step-label">Concluído</span>
+                        </div>
+                      </div>
+
+                      <div className="stepper-details">
+                        <div className="stepper-detail-item">
+                          <span className="detail-dot"></span>
+                          <span>Fase Atual: <strong>Análise de estoque e compatibilidade técnica com o fornecedor</strong></span>
+                        </div>
+                        <div className="stepper-sla">
+                          Previsão de retorno comercial: <strong>24h a 48h úteis</strong> via <em>{q.customerEmail}</em>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="cancelled-notice-box">
+                      <Ban size={15} color="#DC2626" />
+                      <span>Processo cancelado pelo solicitante. Os fornecedores foram notificados da suspensão da demanda.</span>
+                    </div>
+                  )}
 
                   <div className="quote-actions-row">
                     {!isCancelled ? (
