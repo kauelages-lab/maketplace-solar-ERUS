@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { X, Send, CheckCircle2, ShieldAlert } from 'lucide-react';
+import { submitQuote } from '../services/api';
 
 export default function QuoteModal({ product, onClose, onQuoteSuccess }) {
   const [formData, setFormData] = useState({
@@ -26,32 +27,23 @@ export default function QuoteModal({ product, onClose, onQuoteSuccess }) {
     setError(null);
 
     try {
-      const response = await fetch('http://localhost:3001/api/quotes', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          productId: product?.id || null,
-          productName: product?.name || 'Cotação Geral de Projeto Tracker',
-          quantity: formData.quantity,
-          supplier: formData.supplier,
-          customerName: formData.customerName,
-          customerEmail: formData.customerEmail,
-          customerPhone: formData.customerPhone,
-          notes: formData.notes
-        })
+      const quote = await submitQuote({
+        productId: product?.id || null,
+        productName: product?.name || 'Cotação Geral de Projeto Tracker',
+        quantity: formData.quantity,
+        supplier: formData.supplier,
+        customerName: formData.customerName,
+        customerEmail: formData.customerEmail,
+        customerPhone: formData.customerPhone,
+        notes: formData.notes
       });
 
-      const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data.error || 'Erro ao processar solicitação');
-      }
-
-      setSuccessData(data.quote);
+      setSuccessData(quote);
       if (onQuoteSuccess) {
-        onQuoteSuccess(data.quote);
+        onQuoteSuccess(quote);
       }
     } catch (err) {
-      setError(err.message || 'Falha de conexão com o servidor ERUS.');
+      setError(err.message || 'Falha ao processar orçamento.');
     } finally {
       setLoading(false);
     }

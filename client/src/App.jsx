@@ -7,7 +7,8 @@ import QuoteModal from './components/QuoteModal';
 import QuotesDrawer from './components/QuotesDrawer';
 import SuppliersModal from './components/SuppliersModal';
 import Footer from './components/Footer';
-import { PackageSearch, Filter, RefreshCw } from 'lucide-react';
+import { PackageSearch, Filter } from 'lucide-react';
+import { fetchSubsystems, fetchSuppliers, fetchProducts, getStoredQuotes } from './services/api';
 
 export default function App() {
   const [products, setProducts] = useState([]);
@@ -30,19 +31,14 @@ export default function App() {
     async function loadInitialData() {
       try {
         setLoading(true);
-        const [subsystemsRes, suppliersRes, quotesRes] = await Promise.all([
-          fetch('http://localhost:3001/api/subsystems'),
-          fetch('http://localhost:3001/api/suppliers'),
-          fetch('http://localhost:3001/api/quotes')
+        const [subsData, supsData] = await Promise.all([
+          fetchSubsystems(),
+          fetchSuppliers()
         ]);
 
-        const subsData = await subsystemsRes.json();
-        const supsData = await suppliersRes.json();
-        const quotesData = await quotesRes.json();
-
-        setCategories(subsData.subsystems || []);
-        setSuppliers(supsData.suppliers || []);
-        setQuotes(quotesData.quotes || []);
+        setCategories(subsData || []);
+        setSuppliers(supsData || []);
+        setQuotes(getStoredQuotes());
       } catch (err) {
         console.error('Erro ao carregar dados iniciais:', err);
       } finally {
@@ -55,26 +51,20 @@ export default function App() {
 
   // Fetch / filter products
   useEffect(() => {
-    async function loadProducts() {
+    async function loadFilteredProducts() {
       try {
-        const queryParams = new URLSearchParams();
-        if (searchTerm) queryParams.append('search', searchTerm);
-        if (selectedCategory && selectedCategory !== 'Todos') {
-          queryParams.append('subsystem', selectedCategory);
-        }
-        if (selectedSupplier && selectedSupplier !== 'Todos') {
-          queryParams.append('supplier', selectedSupplier);
-        }
-
-        const res = await fetch(`http://localhost:3001/api/products?${queryParams.toString()}`);
-        const data = await res.json();
-        setProducts(data.products || []);
+        const list = await fetchProducts({
+          search: searchTerm,
+          subsystem: selectedCategory,
+          supplier: selectedSupplier
+        });
+        setProducts(list || []);
       } catch (err) {
         console.error('Erro ao buscar produtos:', err);
       }
     }
 
-    loadProducts();
+    loadFilteredProducts();
   }, [searchTerm, selectedCategory, selectedSupplier]);
 
   const handleQuoteSuccess = (newQuote) => {
