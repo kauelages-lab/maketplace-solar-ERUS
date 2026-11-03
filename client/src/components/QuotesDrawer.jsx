@@ -101,12 +101,12 @@ export default function QuotesDrawer({
               </button>
             </div>
             <p style={{ fontSize: '0.74rem', color: '#475569', marginBottom: '8px' }}>
-              Digite a senha de administrador para poder atualizar as etapas das cotações (senha padrão: <strong>erus</strong> ou <strong>1234</strong>):
+              Digite a chave de segurança para gerenciar as demandas e atualizar etapas:
             </p>
             <form onSubmit={handleVerifyPin} style={{ display: 'flex', gap: '6px' }}>
               <input
                 type="password"
-                placeholder="Senha de admin..."
+                placeholder="Chave de acesso..."
                 value={pinInput}
                 onChange={(e) => setPinInput(e.target.value)}
                 autoFocus
@@ -118,7 +118,7 @@ export default function QuotesDrawer({
             </form>
             {pinError && (
               <span style={{ color: '#DC2626', fontSize: '0.72rem', marginTop: '4px', display: 'block' }}>
-                Senha incorreta. Tente 'erus' ou '1234'.
+                Senha incorreta. Tente novamente.
               </span>
             )}
           </div>
