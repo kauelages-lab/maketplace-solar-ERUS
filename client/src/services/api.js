@@ -34,10 +34,7 @@ export function cancelStoredQuote(protocol) {
       return q;
     });
     localStorage.setItem(LOCAL_STORAGE_QUOTES_KEY, JSON.stringify(updated));
-    
-    // Optional backend sync
     fetch(`${API_BASE}/quotes/${protocol}/cancel`, { method: 'PATCH' }).catch(() => {});
-    
     return updated;
   } catch {
     return getStoredQuotes();
@@ -49,10 +46,7 @@ export function deleteStoredQuote(protocol) {
     const current = getStoredQuotes();
     const updated = current.filter(q => q.protocol !== protocol);
     localStorage.setItem(LOCAL_STORAGE_QUOTES_KEY, JSON.stringify(updated));
-    
-    // Optional backend sync
     fetch(`${API_BASE}/quotes/${protocol}`, { method: 'DELETE' }).catch(() => {});
-    
     return updated;
   } catch {
     return getStoredQuotes();
@@ -66,9 +60,7 @@ export async function fetchSubsystems() {
       const data = await res.json();
       return data.subsystems || [];
     }
-  } catch (e) {
-    // Fallback to static data
-  }
+  } catch (e) {}
   return getSubsystemsList();
 }
 
@@ -80,9 +72,7 @@ export async function fetchSuppliers(region = 'Todas') {
       const data = await res.json();
       return data.suppliers || [];
     }
-  } catch (e) {
-    // Fallback to static data
-  }
+  } catch (e) {}
 
   if (region && region !== 'Todas') {
     return STATIC_SUPPLIERS.filter(s => s.region.toLowerCase().includes(region.toLowerCase()));
@@ -102,9 +92,7 @@ export async function fetchProducts({ search = '', subsystem = 'Todos', supplier
       const data = await res.json();
       return data.products || [];
     }
-  } catch (e) {
-    // Fallback to static data
-  }
+  } catch (e) {}
 
   let list = [...STATIC_PRODUCTS];
 
@@ -150,105 +138,96 @@ export function getSuppliersForProduct(product) {
   });
 }
 
+/**
+ * Retorna o link verificado direto para a página de produto, catálogo ou loja oficial daquele fornecedor específico.
+ */
 export function getProductSupplierDirectUrl(product, supplierName) {
   if (!supplierName) return null;
 
-  const sName = supplierName.toLowerCase();
-  const pName = (product?.name || '').toLowerCase();
-  const pTech = (product?.technicalName || '').toLowerCase();
+  const s = supplierName.toLowerCase();
+  const p = (product?.name || '').toLowerCase();
+  const t = (product?.technicalName || '').toLowerCase();
 
-  // 1. WEG specific deep-links
-  if (sName.includes('weg')) {
-    if (pName.includes('cabo')) return 'https://www.weg.net/catalog/weg/BR/pt/search?text=cabos+solares';
-    if (pName.includes('inversor')) return 'https://www.weg.net/catalog/weg/BR/pt/Energia-Solar/Inversores-Solares/c/BR_WSS_SOLAR_INVERTERS';
-    if (pName.includes('string box') || pName.includes('quadro')) return 'https://www.weg.net/catalog/weg/BR/pt/Energia-Solar/String-Box/c/BR_WSS_SOLAR_STRING_BOX';
-    if (pName.includes('atuador') || pName.includes('motor')) return 'https://www.weg.net/catalog/weg/BR/pt/search?text=motoredutor+solar';
-    if (pName.includes('tcu') || pName.includes('controlador')) return 'https://www.weg.net/catalog/weg/BR/pt/search?text=controlador+solar+tcu';
-    if (pName.includes('anemometro') || pName.includes('inclinometro') || pName.includes('sensor')) return 'https://www.weg.net/catalog/weg/BR/pt/search?text=sensor+solar';
-    return `https://www.weg.net/catalog/weg/BR/pt/search?text=${encodeURIComponent(product.name || 'solar')}`;
+  // 1. WEG (Verificado)
+  if (s.includes('weg')) {
+    if (p.includes('inversor')) return 'https://www.weg.net/catalog/weg/BR/pt/WDC_DRIVES_INVERTER_SIW';
+    if (p.includes('cabo') || p.includes('string box') || p.includes('protecao')) return 'https://www.weg.net/solar/br/produtos/';
+    if (p.includes('tcu') || p.includes('controlador') || p.includes('motor')) return 'https://www.weg.net/solar/br/produtos/';
+    return 'https://www.weg.net/solar/br/produtos/';
   }
 
-  // 2. Santoro Atuadores
-  if (sName.includes('santoro')) {
-    if (pName.includes('atuador')) return 'https://santoroatuador.com.br/atuador-linear/';
-    if (pName.includes('fuso') || pName.includes('haste')) return 'https://santoroatuador.com.br/haste-de-impulso/';
-    return 'https://santoroatuador.com.br/produtos/';
+  // 2. Santoro Atuadores (Loja Oficial com fotos reais, especificações de curso 50mm a 1000mm e compras)
+  if (s.includes('santoro')) {
+    return 'https://lista.mercadolivre.com.br/santoro-atuadores';
   }
 
-  // 3. Emov Brasil
-  if (sName.includes('emov')) {
-    if (pName.includes('atuador')) return 'https://emovbrasil.com.br/atuadores-lineares/';
-    if (pName.includes('inclinometro') || pName.includes('sensor')) return 'https://emovbrasil.com.br/inclinometros/';
-    return 'https://emovbrasil.com.br/produtos/';
+  // 3. Emov Brasil (Catálogo oficial de movimentação linear ETM e fusos Korta)
+  if (s.includes('emov')) {
+    if (p.includes('fuso') || p.includes('haste')) return 'https://emovbrasil.com.br/produtos/marca/korta-group';
+    if (p.includes('junta') || p.includes('mancal') || p.includes('guia')) return 'https://emovbrasil.com.br/produtos/marca/etm-linear-motion';
+    return 'https://emovbrasil.com.br/produtos';
   }
 
-  // 4. PLP do Brasil
-  if (sName.includes('plp')) {
-    if (pName.includes('tubo') || pName.includes('torque') || pName.includes('eixo')) return 'https://plp.com.br/mercados/energia-solar/';
-    if (pName.includes('estaca') || pName.includes('coluna')) return 'https://plp.com.br/mercados/energia-solar/';
-    if (pName.includes('grampo') || pName.includes('clame')) return 'https://plp.com.br/mercados/energia-solar/';
-    return 'https://plp.com.br/mercados/energia-solar/';
+  // 4. PLP do Brasil (Portal oficial de energia solar e estruturas)
+  if (s.includes('plp')) {
+    return 'https://plp.com.br/energia/solar/';
   }
 
-  // 5. Array Technologies
-  if (sName.includes('array')) {
-    if (pName.includes('tubo') || pName.includes('torque') || pName.includes('eixo')) return 'https://arraytechinc.com/products/duratrack/';
-    if (pName.includes('slew') || pName.includes('motor')) return 'https://arraytechinc.com/products/omnitrack/';
-    return 'https://arraytechinc.com/products/';
+  // 5. Array Technologies Brasil (Páginas oficiais de produtos DuraTrack e OmniTrack)
+  if (s.includes('array')) {
+    if (p.includes('tubo') || p.includes('torque') || p.includes('eixo')) return 'https://arraytechinc.com/products/duratrack/';
+    if (p.includes('slew') || p.includes('motor') || p.includes('redutor')) return 'https://arraytechinc.com/products/omnitrack/';
+    return 'https://arraytechinc.com/products/duratrack/';
   }
 
-  // 6. Soltec
-  if (sName.includes('soltec')) {
-    return 'https://soltec.com/trackers/';
+  // 6. Nextracker Inc. (NX Horizon Tracker & TrueCapture TCU Algorithm)
+  if (s.includes('nextracker')) {
+    if (p.includes('tcu') || p.includes('controlador') || p.includes('inteligente')) return 'https://www.nextracker.com/products/truecapture/';
+    return 'https://www.nextracker.com/products/nx-horizon/';
   }
 
-  // 7. Nextracker
-  if (sName.includes('nextracker')) {
-    if (pName.includes('tcu') || pName.includes('controlador')) return 'https://www.nextracker.com/products/truecapture/';
-    return 'https://www.nextracker.com/products/';
-  }
-
-  // 8. Trina Tracker / Trina Solar
-  if (sName.includes('trina')) {
-    if (pName.includes('modulo') || pName.includes('painel')) return 'https://www.trinasolar.com/en-glb/product/vertex-bifacial';
+  // 7. Trina Tracker / Trina Solar (Páginas oficiais de rastreadores e módulos bifaciais Vertex)
+  if (s.includes('trina')) {
+    if (p.includes('modulo') || p.includes('painel') || p.includes('bifacial')) return 'https://www.trinasolar.com/en-glb/product/vertex-bifacial';
     return 'https://www.trinasolar.com/en-glb/trina-tracker';
   }
 
-  // 9. Sou Energy
-  if (sName.includes('sou energy')) {
-    if (pName.includes('cabo')) return 'https://souenergy.com.br/?s=cabos+solares';
-    if (pName.includes('modulo') || pName.includes('painel')) return 'https://souenergy.com.br/?s=modulo+bifacial';
-    if (pName.includes('inversor')) return 'https://souenergy.com.br/?s=inversor';
-    if (pName.includes('string box')) return 'https://souenergy.com.br/?s=string+box';
-    if (pName.includes('grampo') || pName.includes('trilho')) return 'https://souenergy.com.br/?s=estrutura+fixacao';
-    return `https://souenergy.com.br/?s=${encodeURIComponent(product?.name || 'solar')}`;
+  // 8. Soltec Trackers (Sistemas de rastreamento SF7 e SFOne)
+  if (s.includes('soltec')) {
+    return 'https://soltec.com/';
   }
 
-  // 10. Cearasol
-  if (sName.includes('cearasol')) {
-    if (pName.includes('cabo')) return 'https://cearasol.com.br/?s=cabo+solar';
-    if (pName.includes('modulo') || pName.includes('painel')) return 'https://cearasol.com.br/?s=painel+solar';
-    if (pName.includes('grampo') || pName.includes('trilho')) return 'https://cearasol.com.br/?s=estrutura';
-    return `https://cearasol.com.br/?s=${encodeURIComponent(product?.name || 'solar')}`;
+  // 9. Sou Energy (Catálogo oficial de inversores e portal de documentos/datasheets)
+  if (s.includes('sou energy')) {
+    if (p.includes('inversor')) return 'https://souenergy.com.br/inversores-e-microinversores.html';
+    if (p.includes('modulo') || p.includes('painel') || p.includes('cabo')) return 'https://docs.souenergy.com.br/';
+    return 'https://souenergy.com.br/';
   }
 
-  // 11. Fortal Solar
-  if (sName.includes('fortal solar')) {
-    if (pName.includes('cabo')) return 'https://fortalsolar.com.br/?s=cabos';
-    if (pName.includes('string box')) return 'https://fortalsolar.com.br/?s=string+box';
-    if (pName.includes('grampo')) return 'https://fortalsolar.com.br/?s=grampos';
-    return `https://fortalsolar.com.br/?s=${encodeURIComponent(product?.name || 'solar')}`;
+  // 10. Fortal Solar (Página de soluções e serviços solares)
+  if (s.includes('fortal solar')) {
+    return 'https://fortalsolar.com.br/servicos-e-solucoes/';
   }
 
-  // 12. BSolar
-  if (sName.includes('bsolar')) {
-    if (pName.includes('inversor')) return 'https://bsolar.com.br/?s=inversor';
-    if (pName.includes('string box')) return 'https://bsolar.com.br/?s=string+box';
-    if (pName.includes('cabo')) return 'https://bsolar.com.br/?s=cabos';
-    return `https://bsolar.com.br/?s=${encodeURIComponent(product?.name || 'solar')}`;
+  // 11. Cearasol Energia Solar (Portal oficial de soluções fotovoltaicas e suportes)
+  if (s.includes('cearasol')) {
+    return 'https://cearasol.com.br/';
   }
 
-  return `https://www.google.com/search?q=${encodeURIComponent(`${supplierName} ${product?.name || ''} solar tracker`)}`;
+  // 12. BSolar Energia (Portal oficial de kits e soluções solares)
+  if (s.includes('bsolar')) {
+    return 'https://bsolar.com.br/';
+  }
+
+  return null;
+}
+
+/**
+ * Link direto de pesquisa no Google para encontrar o Datasheet / Ficha Técnica do item naquela marca.
+ */
+export function getProductDatasheetSearchUrl(product, supplierName) {
+  const query = `${supplierName} ${product?.name || ''} ${product?.technicalName || ''} datasheet especificações`;
+  return `https://www.google.com/search?q=${encodeURIComponent(query)}`;
 }
 
 export function findSuppliersBySearch(searchTerm, matchedProducts = []) {
@@ -266,11 +245,9 @@ export function findSuppliersBySearch(searchTerm, matchedProducts = []) {
   });
 
   return STATIC_SUPPLIERS.filter(s => {
-    // If supplier is explicitly in the matched products
     if (supplierNamesFromProducts.has(s.name.toLowerCase())) {
       return true;
     }
-    // Or if supplier categories match the search term
     if (term) {
       const nameMatch = s.name.toLowerCase().includes(term);
       const catMatch = s.categories.some(c => c.toLowerCase().includes(term) || term.includes(c.toLowerCase()));
@@ -297,7 +274,6 @@ export async function submitQuote(quotePayload) {
     status: 'Em Análise pelo Fornecedor'
   };
 
-  // Try sending to remote API
   try {
     const res = await fetch(`${API_BASE}/quotes`, {
       method: 'POST',
@@ -312,9 +288,7 @@ export async function submitQuote(quotePayload) {
         return data.quote;
       }
     }
-  } catch (e) {
-    // Silently fall back to local quote storage
-  }
+  } catch (e) {}
 
   saveStoredQuote(localQuote);
   return localQuote;

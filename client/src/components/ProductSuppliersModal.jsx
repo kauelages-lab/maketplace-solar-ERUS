@@ -1,6 +1,6 @@
 import React from 'react';
-import { X, Building2, MapPin, Phone, MessageSquare, ExternalLink, Send, ShieldCheck, FileSpreadsheet } from 'lucide-react';
-import { getSuppliersForProduct, getProductSupplierDirectUrl } from '../services/api';
+import { X, Building2, MapPin, Phone, MessageSquare, ExternalLink, Send, ShieldCheck, Search, FileText } from 'lucide-react';
+import { getSuppliersForProduct, getProductSupplierDirectUrl, getProductDatasheetSearchUrl } from '../services/api';
 
 export default function ProductSuppliersModal({ product, onClose, onSelectSupplierToQuote }) {
   if (!product) return null;
@@ -14,10 +14,10 @@ export default function ProductSuppliersModal({ product, onClose, onSelectSuppli
           <div>
             <h3>
               <Building2 size={22} color="#F97316" />
-              <span>Fornecedores Diretos: {product.name}</span>
+              <span>Fornecedores para: {product.name}</span>
             </h3>
             <p style={{ fontSize: '0.8rem', color: '#64748B', marginTop: '2px' }}>
-              {suppliers.length} {suppliers.length === 1 ? 'fornecedor cadastrado com link direto para o produto' : 'fornecedores cadastrados com links diretos para o produto'}
+              {suppliers.length} {suppliers.length === 1 ? 'empresa cadastrada com links diretos e canais de contato' : 'empresas cadastradas com links diretos e canais de contato'}
             </p>
           </div>
           <button className="modal-close-btn" onClick={onClose} title="Fechar">
@@ -37,9 +37,10 @@ export default function ProductSuppliersModal({ product, onClose, onSelectSuppli
           <div className="suppliers-grid">
             {suppliers.map((sup, idx) => {
               const directProductUrl = getProductSupplierDirectUrl(product, sup.name);
+              const datasheetUrl = getProductDatasheetSearchUrl(product, sup.name);
 
               const whatsappMsg = encodeURIComponent(
-                `Olá, equipe da ${sup.name}! Gostaria de solicitar especificações e orçamento para o item "${product.name}" (${product.estimatedQty}) encontrado através do marketplace ERUS Solar.`
+                `Olá, equipe da ${sup.name}! Gostaria de solicitar especificações técnicas e cotação para o item "${product.name}" (${product.estimatedQty}) através do marketplace ERUS Solar.`
               );
 
               return (
@@ -60,21 +61,32 @@ export default function ProductSuppliersModal({ product, onClose, onSelectSuppli
                     <span className="supplier-region-badge">{sup.region}</span>
                   </div>
 
-                  {/* Direct Product Link Highlight */}
-                  {directProductUrl && (
-                    <div style={{ margin: '8px 0 4px' }}>
+                  {/* Direct Product and Datasheet Action Links */}
+                  <div className="supplier-links-group" style={{ margin: '10px 0 6px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                    {directProductUrl && (
                       <a
                         href={directProductUrl}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="btn-product-direct-link"
-                        title={`Ir direto para a página e ficha técnica deste item no catálogo da ${sup.name}`}
+                        title={`Acessar página oficial do produto ou catálogo na ${sup.name}`}
                       >
                         <ExternalLink size={15} />
-                        <span>Acessar {product.name} no Catálogo da {sup.name} ↗</span>
+                        <span>Ver Peça no Catálogo / Site da {sup.name} ↗</span>
                       </a>
-                    </div>
-                  )}
+                    )}
+
+                    <a
+                      href={datasheetUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="btn-product-datasheet-link"
+                      title={`Buscar ficha técnica e datasheet oficial de ${product.name} da ${sup.name}`}
+                    >
+                      <FileText size={14} />
+                      <span>Buscar Ficha Técnica / Datasheet no Google ↗</span>
+                    </a>
+                  </div>
 
                   <div className="supplier-contact-row" style={{ marginTop: '8px' }}>
                     {sup.whatsapp && (

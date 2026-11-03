@@ -1181,6 +1181,29 @@ input, select, textarea {
   box-shadow: 0 2px 6px rgba(249, 115, 22, 0.15);
 }
 
+.btn-product-datasheet-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #F8FAFC;
+  color: #475569;
+  border: 1px solid #CBD5E1;
+  padding: 7px 12px;
+  border-radius: var(--radius-md);
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.btn-product-datasheet-link:hover {
+  background: #F1F5F9;
+  color: #0F172A;
+  border-color: #94A3B8;
+}
+
 .contact-link {
   display: flex;
   align-items: center;
