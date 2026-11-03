@@ -1,8 +1,8 @@
 import React from 'react';
 import ProductIllustration from './ProductIllustration';
-import { Send, CheckCircle2 } from 'lucide-react';
+import { Send, Building2 } from 'lucide-react';
 
-export default function ProductCard({ product, onRequestQuote }) {
+export default function ProductCard({ product, onRequestQuote, onViewSuppliers }) {
   return (
     <div className="product-card">
       <div className="card-image-area">
@@ -27,23 +27,51 @@ export default function ProductCard({ product, onRequestQuote }) {
         </div>
 
         <div className="card-suppliers">
-          <div className="suppliers-label">Fornecedores Homologados:</div>
+          <div className="card-suppliers-header">
+            <span className="suppliers-label">Fornecedores ({product.suppliers.length}):</span>
+            <button
+              className="btn-compare-suppliers"
+              onClick={() => onViewSuppliers && onViewSuppliers(product)}
+              title="Comparar fornecedores e contatos diretos deste item"
+            >
+              <Building2 size={12} />
+              <span>Ver todos ({product.suppliers.length})</span>
+            </button>
+          </div>
+
           <div className="supplier-tags-list">
-            {product.suppliers.map((sup, idx) => (
-              <span key={idx} className="supplier-tag">
+            {product.suppliers.slice(0, 4).map((sup, idx) => (
+              <span
+                key={idx}
+                className="supplier-tag"
+                onClick={() => onViewSuppliers && onViewSuppliers(product)}
+                style={{ cursor: 'pointer' }}
+                title="Clique para ver contatos deste fornecedor"
+              >
                 {sup}
               </span>
             ))}
+            {product.suppliers.length > 4 && (
+              <span
+                className="supplier-tag-more"
+                onClick={() => onViewSuppliers && onViewSuppliers(product)}
+                style={{ cursor: 'pointer' }}
+              >
+                +{product.suppliers.length - 4} mais
+              </span>
+            )}
           </div>
         </div>
 
-        <button
-          className="card-action-btn"
-          onClick={() => onRequestQuote(product)}
-        >
-          <Send size={15} />
-          <span>Solicitar Orçamento</span>
-        </button>
+        <div className="card-actions-row">
+          <button
+            className="card-action-btn"
+            onClick={() => onRequestQuote(product)}
+          >
+            <Send size={15} />
+            <span>Solicitar Orçamento</span>
+          </button>
+        </div>
       </div>
     </div>
   );

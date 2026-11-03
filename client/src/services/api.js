@@ -114,7 +114,9 @@ export async function fetchProducts({ search = '', subsystem = 'Todos', supplier
       p.name.toLowerCase().includes(term) ||
       p.technicalName.toLowerCase().includes(term) ||
       p.function.toLowerCase().includes(term) ||
-      p.specification.toLowerCase().includes(term)
+      p.specification.toLowerCase().includes(term) ||
+      (p.keywords && p.keywords.some(k => k.toLowerCase().includes(term) || term.includes(k.toLowerCase()))) ||
+      (p.suppliers && p.suppliers.some(s => s.toLowerCase().includes(term)))
     );
   }
 
@@ -127,6 +129,55 @@ export async function fetchProducts({ search = '', subsystem = 'Todos', supplier
   }
 
   return list;
+}
+
+export function getSuppliersForProduct(product) {
+  if (!product || !product.suppliers) return [];
+  return product.suppliers.map(supName => {
+    const found = STATIC_SUPPLIERS.find(s => s.name.toLowerCase() === supName.toLowerCase());
+    return found || {
+      id: Math.random(),
+      name: supName,
+      region: 'Nacional',
+      location: 'Brasil',
+      categories: [product.subsystem],
+      phone: '',
+      whatsapp: '',
+      email: '',
+      website: '',
+      verified: true
+    };
+  });
+}
+
+export function findSuppliersBySearch(searchTerm, matchedProducts = []) {
+  if (!searchTerm && matchedProducts.length === 0) {
+    return STATIC_SUPPLIERS;
+  }
+
+  const term = searchTerm ? searchTerm.toLowerCase() : '';
+  const supplierNamesFromProducts = new Set();
+  
+  matchedProducts.forEach(p => {
+    if (p.suppliers) {
+      p.suppliers.forEach(s => supplierNamesFromProducts.add(s.toLowerCase()));
+    }
+  });
+
+  return STATIC_SUPPLIERS.filter(s => {
+    // If supplier is explicitly in the matched products
+    if (supplierNamesFromProducts.has(s.name.toLowerCase())) {
+      return true;
+    }
+    // Or if supplier categories match the search term
+    if (term) {
+      const nameMatch = s.name.toLowerCase().includes(term);
+      const catMatch = s.categories.some(c => c.toLowerCase().includes(term) || term.includes(c.toLowerCase()));
+      const locMatch = s.location.toLowerCase().includes(term);
+      return nameMatch || catMatch || locMatch;
+    }
+    return false;
+  });
 }
 
 export async function submitQuote(quotePayload) {

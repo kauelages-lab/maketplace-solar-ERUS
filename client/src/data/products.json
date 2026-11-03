@@ -7,9 +7,10 @@
     "function": "Fixação do tracker no solo e sustentação de carga de vento/peso",
     "specification": "Aço carbono galvanizado a quente (ASTM A123) / Concreto",
     "estimatedQty": "4 a 6 unid",
-    "suppliers": ["PLP do Brasil", "Soltec Trackers", "Sou Energy"],
+    "suppliers": ["PLP do Brasil", "Soltec Trackers", "Sou Energy", "Cearasol Energia Solar"],
     "iconType": "pile",
-    "highlight": "Resistente à corrosão severa em solo"
+    "highlight": "Resistente à corrosão severa em solo",
+    "keywords": ["estaca", "estacas", "cravagem", "sapata", "sapatas", "fundacao", "ground screw", "footing"]
   },
   {
     "id": 2,
@@ -19,9 +20,10 @@
     "function": "Elevação dos eixos em relação ao solo e suporte dos mancais",
     "specification": "Perfil C / U em Aço Galvanizado a Quente",
     "estimatedQty": "4 a 6 unid",
-    "suppliers": ["PLP do Brasil", "Soltec Trackers"],
+    "suppliers": ["PLP do Brasil", "Soltec Trackers", "Cearasol Energia Solar", "Sou Energy"],
     "iconType": "post",
-    "highlight": "Perfil estrutural reforçado"
+    "highlight": "Perfil estrutural reforçado",
+    "keywords": ["coluna", "colunas", "pilar", "pilares", "pilons", "sustentacao", "poste"]
   },
   {
     "id": 3,
@@ -31,9 +33,10 @@
     "function": "Viga principal retangular/circular que gira suportando os painéis",
     "specification": "Aço estrutural de alta resistência (S355/ST52) galvanizado",
     "estimatedQty": "12 a 18 metros",
-    "suppliers": ["PLP do Brasil", "Array Technologies Brasil"],
+    "suppliers": ["PLP do Brasil", "Array Technologies Brasil", "Soltec Trackers"],
     "iconType": "torque_tube",
-    "highlight": "Alta rigidez torsional contra rajadas de vento"
+    "highlight": "Alta rigidez torsional contra rajadas de vento",
+    "keywords": ["tubo de torque", "torque tube", "eixo", "eixo principal", "tubo", "viga de giro"]
   },
   {
     "id": 4,
@@ -43,9 +46,10 @@
     "function": "Permitir a rotação suave do Tubo de Torque sem desgaste mecânico",
     "specification": "Polímero autolubrificante (UV resistant) ou ferro fundido selado",
     "estimatedQty": "4 a 6 conjuntos",
-    "suppliers": ["Array Technologies Brasil", "PLP do Brasil"],
+    "suppliers": ["Array Technologies Brasil", "PLP do Brasil", "Soltec Trackers"],
     "iconType": "bearing",
-    "highlight": "Zero manutenção e proteção anti-UV"
+    "highlight": "Zero manutenção e proteção anti-UV",
+    "keywords": ["mancal", "mancais", "rolamento", "rolamentos", "pillow block", "bearing", "bucha"]
   },
   {
     "id": 5,
@@ -55,9 +59,10 @@
     "function": "Perfil fixado ao tubo de torque para apoio direto dos módulos",
     "specification": "Alumínio Anodizado ou Aço Zinco-Alumínio (Magnélio)",
     "estimatedQty": "16 a 24 unid",
-    "suppliers": ["Sou Energy", "Cearasol Energia Solar", "PLP do Brasil"],
+    "suppliers": ["Sou Energy", "Cearasol Energia Solar", "PLP do Brasil", "Soltec Trackers", "Fortal Solar"],
     "iconType": "rail",
-    "highlight": "Encaixe rápido e liga leve anticorrosão"
+    "highlight": "Encaixe rápido e liga leve anticorrosão",
+    "keywords": ["trilho", "trilhos", "viga", "vigas", "perfil", "perfis", "braco", "bracos", "rail", "purling"]
   },
   {
     "id": 6,
@@ -67,9 +72,10 @@
     "function": "Fixar os módulos fotovoltaicos nos perfis sem danificar o alumínio",
     "specification": "Alumínio Anodizado com parafusos inox A2/A4",
     "estimatedQty": "64 a 96 unid",
-    "suppliers": ["Fortal Solar", "Cearasol Energia Solar", "Sou Energy"],
+    "suppliers": ["Fortal Solar", "Cearasol Energia Solar", "Sou Energy", "BSolar Energia", "PLP do Brasil"],
     "iconType": "clamp",
-    "highlight": "Parafusos inoxidáveis A2/A4 inclusos"
+    "highlight": "Parafusos inoxidáveis A2/A4 inclusos",
+    "keywords": ["grampo", "grampos", "clame", "clames", "clamp", "clamps", "mid clamp", "end clamp", "fixador", "presilha"]
   },
   {
     "id": 7,
@@ -79,9 +85,10 @@
     "function": "Articulação de conexão entre o atuador motorizado e o tubo",
     "specification": "Aço Inox / Aço Galvanizado reforçado",
     "estimatedQty": "1 a 2 conjuntos",
-    "suppliers": ["Emov Brasil", "Santoro Atuadores"],
+    "suppliers": ["Emov Brasil", "Santoro Atuadores", "PLP do Brasil"],
     "iconType": "joint",
-    "highlight": "Articulação cardan de alta durabilidade"
+    "highlight": "Articulação cardan de alta durabilidade",
+    "keywords": ["junta", "juntas", "cardan", "articulacao", "swivel joint", "sapata de articulacao"]
   },
   {
     "id": 8,
@@ -91,9 +98,10 @@
     "function": "Converter energia elétrica em movimento linear para girar o eixo",
     "specification": "Motor 24V CC / 230V CA, força 10kN a 50kN, IP66/IP67",
     "estimatedQty": "1 a 2 unid",
-    "suppliers": ["Santoro Atuadores", "Emov Brasil", "WEG Equipamentos Elétricos"],
+    "suppliers": ["Santoro Atuadores", "Emov Brasil", "WEG Equipamentos Elétricos", "Array Technologies Brasil"],
     "iconType": "actuator",
-    "highlight": "Grau de proteção IP66/IP67 para ambientes agressivos"
+    "highlight": "Grau de proteção IP66/IP67 para ambientes agressivos",
+    "keywords": ["atuador", "atuador linear", "atuadores", "pistao", "braco motorizado", "linear actuator"]
   },
   {
     "id": 9,
@@ -105,7 +113,8 @@
     "estimatedQty": "1 unid",
     "suppliers": ["WEG Equipamentos Elétricos", "Array Technologies Brasil", "Soltec Trackers"],
     "iconType": "motor",
-    "highlight": "Trava mecânica integrada contra ventos fortes"
+    "highlight": "Trava mecânica integrada contra ventos fortes",
+    "keywords": ["motor", "redutor", "slew drive", "motoredutor", "rosca sem fim", "worm gear"]
   },
   {
     "id": 10,
@@ -117,7 +126,8 @@
     "estimatedQty": "Integrado ao atuador",
     "suppliers": ["Santoro Atuadores", "Emov Brasil"],
     "iconType": "screw",
-    "highlight": "Fuso temperado de alto rendimento mecânico"
+    "highlight": "Fuso temperado de alto rendimento mecânico",
+    "keywords": ["fuso", "haste", "haste de impulso", "fuso de esferas", "drive rod", "screw rod"]
   },
   {
     "id": 11,
@@ -127,9 +137,10 @@
     "function": "Calcular a posição do Sol (algoritmo SPA) e comandar o motor",
     "specification": "Microcontrolador/PLC com porta RS485/Modbus, IP65",
     "estimatedQty": "1 painel",
-    "suppliers": ["WEG Equipamentos Elétricos", "Nextracker Inc.", "Trina Tracker (Trina Solar)"],
+    "suppliers": ["WEG Equipamentos Elétricos", "Nextracker Inc.", "Trina Tracker (Trina Solar)", "BSolar Energia"],
     "iconType": "tcu",
-    "highlight": "Algoritmo SPA e integração Modbus/LoRa"
+    "highlight": "Algoritmo SPA e integração Modbus/LoRa",
+    "keywords": ["tcu", "controladora", "placa", "controlador", "algoritmo solar", "spa", "plc", "automacao"]
   },
   {
     "id": 12,
@@ -139,9 +150,10 @@
     "function": "Medir a velocidade do vento e acionar o modo de proteção (Stow Mode)",
     "specification": "Sensor de conchas com saída 4-20mA / Pulsos",
     "estimatedQty": "1 unid",
-    "suppliers": ["WEG Equipamentos Elétricos", "Fortal Solar"],
+    "suppliers": ["WEG Equipamentos Elétricos", "Fortal Solar", "Emov Brasil"],
     "iconType": "anemometer",
-    "highlight": "Resposta rápida para ativação de Stow Mode"
+    "highlight": "Resposta rápida para ativação de Stow Mode",
+    "keywords": ["anemometro", "sensor de vento", "vento", "stow mode", "velocidade do vento", "conchas"]
   },
   {
     "id": 13,
@@ -151,9 +163,10 @@
     "function": "Medir o ângulo real da estrutura para feedback de rotação",
     "specification": "Inclinômetro MEMS digital de alta precisão IP67",
     "estimatedQty": "1 a 2 unid",
-    "suppliers": ["WEG Equipamentos Elétricos", "Emov Brasil"],
+    "suppliers": ["WEG Equipamentos Elétricos", "Emov Brasil", "Fortal Solar"],
     "iconType": "inclinometer",
-    "highlight": "Precisão de 0.05° com sensor MEMS blindado"
+    "highlight": "Precisão de 0.05° com sensor MEMS blindado",
+    "keywords": ["inclinometro", "sensor de inclinacao", "giroscopio", "tilt sensor", "angulo"]
   },
   {
     "id": 14,
@@ -163,9 +176,10 @@
     "function": "Limitar o ângulo máximo de rotação (+-60°) evitando colisão mecânica",
     "specification": "Chaves de fim de curso ópticas ou indutivas seladas",
     "estimatedQty": "2 a 4 unid",
-    "suppliers": ["Fortal Solar", "WEG Equipamentos Elétricos"],
+    "suppliers": ["Fortal Solar", "WEG Equipamentos Elétricos", "BSolar Energia"],
     "iconType": "limit_switch",
-    "highlight": "Segurança mecânica redundante fail-safe"
+    "highlight": "Segurança mecânica redundante fail-safe",
+    "keywords": ["fim de curso", "sensor de fim de curso", "limit switch", "microswitch", "chave fim de curso"]
   },
   {
     "id": 15,
@@ -175,9 +189,10 @@
     "function": "Garantir movimentação para posição de segurança se faltar rede elétrica",
     "specification": "Bateria de Lítio / Chumbo-Ácido com carregador solar/fonte CC",
     "estimatedQty": "1 conjunto",
-    "suppliers": ["Sou Energy", "BSolar Energia", "WEG Equipamentos Elétricos"],
+    "suppliers": ["Sou Energy", "BSolar Energia", "WEG Equipamentos Elétricos", "Fortal Solar"],
     "iconType": "ups",
-    "highlight": "Autonomia de emergência para recolhimento em tempestades"
+    "highlight": "Autonomia de emergência para recolhimento em tempestades",
+    "keywords": ["nobreak", "ups", "bateria", "baterias", "fonte", "fonte 24v", "backup"]
   },
   {
     "id": 16,
@@ -187,9 +202,10 @@
     "function": "Captar radiação direta e albedo refletido no solo durante o giro",
     "specification": "Células Monocristalinas de alta eficiência",
     "estimatedQty": "16 a 24 unid",
-    "suppliers": ["Sou Energy", "Cearasol Energia Solar", "BSolar Energia", "Fortal Solar"],
+    "suppliers": ["Sou Energy", "Cearasol Energia Solar", "BSolar Energia", "Fortal Solar", "Trina Tracker (Trina Solar)"],
     "iconType": "pv_panel",
-    "highlight": "Ganho traseiro de até 25% com ganho de albedo"
+    "highlight": "Ganho traseiro de até 25% com ganho de albedo",
+    "keywords": ["modulo", "modulos", "painel", "paineis", "placa solar", "placas", "fotovoltaico", "bifacial", "550w"]
   },
   {
     "id": 17,
@@ -199,9 +215,10 @@
     "function": "Converter CC em CA sincronizada com a rede elétrica",
     "specification": "Entrada MPPT de alta corrente compatível com bifacial",
     "estimatedQty": "1 unid",
-    "suppliers": ["Sou Energy", "BSolar Energia", "WEG Equipamentos Elétricos"],
+    "suppliers": ["Sou Energy", "BSolar Energia", "WEG Equipamentos Elétricos", "Fortal Solar", "Cearasol Energia Solar"],
     "iconType": "inverter",
-    "highlight": "Eficiência > 98.4% com múltiplos rastreadores MPPT"
+    "highlight": "Eficiência > 98.4% com múltiplos rastreadores MPPT",
+    "keywords": ["inversor", "inversores", "grid tie", "string inverter", "conversor", "mppt"]
   },
   {
     "id": 18,
@@ -211,20 +228,22 @@
     "function": "Disjuntores CC, DPS (Protetor de Surto) e fusíveis solares",
     "specification": "Caixa termoplástica IP65 com DPS 1000V/1500V CC",
     "estimatedQty": "1 unid",
-    "suppliers": ["Fortal Solar", "Sou Energy", "WEG Equipamentos Elétricos"],
+    "suppliers": ["Fortal Solar", "Sou Energy", "WEG Equipamentos Elétricos", "BSolar Energia", "Cearasol Energia Solar"],
     "iconType": "string_box",
-    "highlight": "Proteção completa classe II contra surtos atmosféricos"
+    "highlight": "Proteção completa classe II contra surtos atmosféricos",
+    "keywords": ["string box", "protecao cc", "quadro cc", "dps", "disjuntor cc", "caixa de juncao"]
   },
   {
     "id": 19,
     "subsystem": "Componentes Elétricos",
     "name": "Cabos Solares Resistentes a Torção",
-    "technicalName": "Solar Cables 4mm²/6mm² UV Protection",
+    "technicalName": "Solar Cables 4mm²/6mm² UV Protection (Cabos CC / CA)",
     "function": "Conexão elétrica dos módulos que acompanham a movimentação",
     "specification": "Cobre estanhado flexível, isolamento 1.8kV CC, resistente a intempéries",
     "estimatedQty": "50 a 100 metros",
-    "suppliers": ["Sou Energy", "Fortal Solar", "Cearasol Energia Solar"],
+    "suppliers": ["Sou Energy", "Fortal Solar", "Cearasol Energia Solar", "BSolar Energia", "WEG Equipamentos Elétricos"],
     "iconType": "cables",
-    "highlight": "Certificação TÜV para mais de 100.000 ciclos de torção"
+    "highlight": "Certificação TÜV para mais de 100.000 ciclos de torção",
+    "keywords": ["cabo", "cabos", "cabo cc", "cabos cc", "cabo solar", "cabos solares", "fio solar", "fios", "corrente continua", "conectores mc4"]
   }
 ]
